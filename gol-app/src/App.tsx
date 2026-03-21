@@ -4,7 +4,13 @@ function App() {
   return (
     <>
       <h1>App</h1>
-      <Game />
+      <Game
+        gridWidth={100}
+        gridHeight={80}
+        randomLiveCellsProb={0.2}
+        speed={25}
+        cellSize={8}
+      />
     </>
   );
 }

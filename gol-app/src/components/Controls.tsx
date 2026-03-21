@@ -36,7 +36,7 @@ export default function Controls(props: ControlsProps) {
   const [height, setHeight] = useState(`${props.height}`);
   const [errors, setErrors] = useState<string[]>([]);
   return (
-    <Card className="mx-20">
+    <Card className="mx-20 my-5">
       <CardContent>
         <div className="flex gap-4">
           <Field>
@@ -98,7 +98,7 @@ export default function Controls(props: ControlsProps) {
                 variant="secondary"
                 onClick={() => {
                   setIsRunning(false);
-                  props.onPrev();
+                  props.onNext();
                 }}
               >
                 {"->"}
