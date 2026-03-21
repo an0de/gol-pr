@@ -1,5 +1,4 @@
 const PRESETS = {
-  CLEAR: [],
   GLIDER: [
     [1, 0],
     [2, 1],
