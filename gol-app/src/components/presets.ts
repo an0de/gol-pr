@@ -1,4 +1,5 @@
-const PRESETS = {
+const PRESETS: { [key: string]: number[][] } = {
+  CELL: [[0, 0]],
   GLIDER: [
     [1, 0],
     [2, 1],

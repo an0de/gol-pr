@@ -108,7 +108,7 @@ export default function Controls(props: ControlsProps) {
 
           <Field>
             <FieldLabel htmlFor="preset-sel">Select Preset</FieldLabel>
-            <ToggleGroup id="preset-sel" type="single" defaultValue="single">
+            <ToggleGroup id="preset-sel" type="single" defaultValue="CELL">
               {Object.keys(presets).map((name, i) => (
                 <ToggleGroupItem
                   variant="outline"

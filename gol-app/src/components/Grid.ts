@@ -72,4 +72,16 @@ export default class Grid {
     );
     return this.current;
   }
+
+  getLiveCells() {
+    const liveCells: number[][] = [];
+    this.current.forEach((row, i) =>
+      row.forEach((isAlive, j) => {
+        if (isAlive) {
+          liveCells.push([i, j]);
+        }
+      }),
+    );
+    return liveCells;
+  }
 }

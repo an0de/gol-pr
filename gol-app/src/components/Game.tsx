@@ -2,6 +2,7 @@ import { useRef, useEffect, useState, useCallback } from "react";
 import Controls from "./Controls.tsx";
 import ShareTools from "./ShareTools.tsx";
 import Grid from "./Grid.ts";
+import presets from "./presets.ts";
 
 interface ConfigProps {
   gridWidth: number;
@@ -23,6 +24,7 @@ export default function Game(props: ConfigProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const cellSize = props.cellSize;
   const maxSpeed = 100;
+  const stampRef = useRef(presets.CELL);
 
   const draw = useCallback(() => {
     const canvas = canvasRef.current;
@@ -91,9 +93,11 @@ export default function Game(props: ConfigProps) {
           gridRef.current.forward();
           draw();
           console.log("next", gridRef.current);
+          console.log(gridRef.current.getLiveCells());
         }}
         onSelectPreset={(name: string) => {
-          console.log("preset", name);
+          stampRef.current = presets[name];
+          console.log("preset", stampRef.current, name);
         }}
         onChangeSpeed={(value) => {
           if (Number.isInteger(value)) {
@@ -121,18 +125,16 @@ export default function Game(props: ConfigProps) {
             const y = Math.floor((e.clientY - rect.top) / cellSize);
             console.log(x, y, rect);
             console.log(gridRef);
-            gridRef.current.current[y][x] = gridRef.current.current[y][x]
-              ? 0
-              : 1;
+
+            stampRef.current.forEach(([xOffset, yOffset]) => {
+              const yTarget = (y + yOffset + height) % height;
+              const xTarget = (x + xOffset + width) % width;
+              gridRef.current.current[yTarget][xTarget] = 1;
+            });
             draw();
           }}
         />
       </div>
-      <ShareTools
-        onExport={() => {}}
-        onImport={() => {}}
-        onSaveAsPng={() => {}}
-      />
     </div>
   );
 }
