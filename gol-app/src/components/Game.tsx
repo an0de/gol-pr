@@ -22,8 +22,9 @@ export default function Game(props: ConfigProps) {
   );
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const cellSize = props.cellSize;
+  const maxSpeed = 100;
 
-  const draw = () => {
+  const draw = useCallback(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext("2d");
@@ -33,12 +34,27 @@ export default function Game(props: ConfigProps) {
     gridRef.current.current.forEach((row, i) => {
       row.forEach((cell, j) => {
         if (cell) {
-          ctx.fillStyle = "#10b981"; // Tailwind emerald-500
+          ctx.fillStyle = "#444";
           ctx.fillRect(j * cellSize, i * cellSize, cellSize - 1, cellSize - 1);
         }
       });
     });
-  };
+  }, [cellSize]);
+
+  useEffect(() => {
+    let intervalId = -1;
+    if (isRunning) {
+      intervalId = setInterval(() => {
+        gridRef.current.forward();
+        draw();
+      }, maxSpeed - speed);
+    }
+    return () => {
+      if (intervalId > 0) {
+        clearInterval(intervalId);
+      }
+    };
+  }, [draw, isRunning, speed]);
 
   return (
     <div className="flex flex-col items-center min-h-screen">
@@ -46,21 +62,23 @@ export default function Game(props: ConfigProps) {
         width={width}
         height={height}
         onRunToggle={(isRunning) => {
-          setIsRunning(isRunning);
+          setIsRunning(!isRunning);
           console.log(isRunning && "running");
         }}
         onSetCleanGrid={() => {
           // setGrid(Array.from({ length: height }, () => Array(width).fill(0)));
-          gridRef.current.current = Array.from({ length: height }, () =>
-            Array(width).fill(0),
+          gridRef.current = new Grid(
+            Array.from({ length: height }, () => Array(width).fill(0)),
           );
           draw();
         }}
         onSetRandomGrid={() => {
-          gridRef.current.current = Array.from({ length: height }, () =>
-            Array(width)
-              .fill(0)
-              .map(() => (Math.random() > randomLiveCellsProb ? 0 : 1)),
+          gridRef.current = new Grid(
+            Array.from({ length: height }, () =>
+              Array(width)
+                .fill(0)
+                .map(() => (Math.random() > randomLiveCellsProb ? 0 : 1)),
+            ),
           );
           draw();
         }}

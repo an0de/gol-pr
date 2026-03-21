@@ -30,8 +30,8 @@ export default class Grid {
   }
 
   back() {
-    this.historyPos -= 1;
-    if (-1 * this.historyPos <= this.historyLimit) {
+    if (-1 * this.historyPos < this.history.length && this.history.length > 0) {
+      this.historyPos -= 1;
       this.current = this.history.at(this.historyPos) || [];
     }
   }
@@ -55,11 +55,11 @@ export default class Grid {
     function decide(isAlive: number, i: number, j: number) {
       const neighbors = liveNeighborsCount(i, j);
       if (isAlive) {
-        if (neighbors == 2 || neighbors == 3) {
+        if (neighbors === 2 || neighbors === 3) {
           return 1;
         }
       } else {
-        if (neighbors == 3) {
+        if (neighbors === 3) {
           return 1;
         }
       }
