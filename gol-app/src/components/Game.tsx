@@ -1,8 +1,13 @@
 import { useRef, useEffect, useState, useCallback } from "react";
 import Controls from "./Controls.tsx";
-import ShareTools from "./ShareTools.tsx";
 import Grid from "./Grid.ts";
 import presets from "./presets.ts";
+
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { ButtonGroup } from "@/components/ui/button-group";
+import { Field, FieldLabel } from "@/components/ui/field";
+import { Card, CardContent } from "@/components/ui/card";
 
 interface ConfigProps {
   gridWidth: number;
@@ -65,10 +70,8 @@ export default function Game(props: ConfigProps) {
         height={height}
         onRunToggle={(isRunning) => {
           setIsRunning(!isRunning);
-          console.log(isRunning && "running");
         }}
         onSetCleanGrid={() => {
-          // setGrid(Array.from({ length: height }, () => Array(width).fill(0)));
           gridRef.current = new Grid(
             Array.from({ length: height }, () => Array(width).fill(0)),
           );
@@ -87,28 +90,22 @@ export default function Game(props: ConfigProps) {
         onPrev={() => {
           gridRef.current.back();
           draw();
-          console.log("next", gridRef.current);
         }}
         onNext={() => {
           gridRef.current.forward();
           draw();
-          console.log("next", gridRef.current);
-          console.log(gridRef.current.getLiveCells());
         }}
         onSelectPreset={(name: string) => {
           stampRef.current = presets[name];
-          console.log("preset", stampRef.current, name);
         }}
         onChangeSpeed={(value) => {
           if (Number.isInteger(value)) {
             setSpeed(Number(value));
           }
-          console.log("speed", value);
         }}
         onResize={(width: number, height: number) => {
           setWidth(width);
           setHeight(height);
-          console.log("size", width, height);
         }}
       />
 
@@ -123,8 +120,6 @@ export default function Game(props: ConfigProps) {
             if (!rect) return;
             const x = Math.floor((e.clientX - rect.left) / cellSize);
             const y = Math.floor((e.clientY - rect.top) / cellSize);
-            console.log(x, y, rect);
-            console.log(gridRef);
 
             stampRef.current.forEach(([xOffset, yOffset]) => {
               const yTarget = (y + yOffset + height) % height;
@@ -135,6 +130,71 @@ export default function Game(props: ConfigProps) {
           }}
         />
       </div>
+
+      <Card className="mx-20 my-5">
+        <CardContent>
+          <div className="flex gap-4">
+            <Field>
+              <FieldLabel>Share</FieldLabel>
+              <Button
+                variant="outline"
+                onClick={() => {
+                  const imageURL = canvasRef.current?.toDataURL("image/png");
+                  const link = document.createElement("a");
+                  link.href = `${imageURL}`;
+                  link.download = "grid.png";
+                  link.click();
+                }}
+              >
+                Save as png
+              </Button>
+              <Button
+                variant="outline"
+                onClick={() => {
+                  const encoded = btoa(
+                    JSON.stringify(gridRef.current.getLiveCells()),
+                  );
+                  const link = document.createElement("a");
+                  link.href = `data:application/json;base64,${encoded}`;
+                  link.download = "grid.json";
+                  link.click();
+                }}
+              >
+                Export
+              </Button>
+              <Field>
+                <FieldLabel htmlFor="import-input">Import</FieldLabel>
+                <Input
+                  id="import-input"
+                  type="file"
+                  accept=".json"
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+
+                    if (file) {
+                      const reader = new FileReader();
+
+                      reader.onload = (e) => {
+                        const text = e.target?.result;
+                        const liveCells = JSON.parse(String(text));
+                        gridRef.current = new Grid(
+                          Array.from({ length: height }, () =>
+                            Array(width).fill(0),
+                          ),
+                        );
+                        gridRef.current.setFromLiveCells(liveCells);
+                        draw();
+                      };
+
+                      reader.readAsText(file);
+                    }
+                  }}
+                />
+              </Field>
+            </Field>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 }

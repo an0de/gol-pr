@@ -84,4 +84,10 @@ export default class Grid {
     );
     return liveCells;
   }
+
+  setFromLiveCells(liveCells: number[][]) {
+    liveCells.forEach(([i, j]) => {
+      this.current[i][j] = 1;
+    });
+  }
 }
