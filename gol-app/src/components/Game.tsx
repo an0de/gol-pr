@@ -76,6 +76,7 @@ export default function Game(props: ConfigProps) {
             Array.from({ length: height }, () => Array(width).fill(0)),
           );
           draw();
+          setIsRunning(false);
         }}
         onSetRandomGrid={() => {
           gridRef.current = new Grid(
@@ -86,6 +87,7 @@ export default function Game(props: ConfigProps) {
             ),
           );
           draw();
+          setIsRunning(false);
         }}
         onPrev={() => {
           gridRef.current.back();
