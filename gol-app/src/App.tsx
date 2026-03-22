@@ -6,7 +6,7 @@ function App() {
       <h1>App</h1>
       <Game
         gridWidth={100}
-        gridHeight={80}
+        gridHeight={60}
         randomLiveCellsProb={0.2}
         speed={25}
         cellSize={8}

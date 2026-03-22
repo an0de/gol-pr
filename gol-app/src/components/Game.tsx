@@ -136,61 +136,63 @@ export default function Game(props: ConfigProps) {
           <div className="flex gap-4">
             <Field>
               <FieldLabel>Share</FieldLabel>
-              <Button
-                variant="outline"
-                onClick={() => {
-                  const imageURL = canvasRef.current?.toDataURL("image/png");
-                  const link = document.createElement("a");
-                  link.href = `${imageURL}`;
-                  link.download = "grid.png";
-                  link.click();
-                }}
-              >
-                Save as png
-              </Button>
-              <Button
-                variant="outline"
-                onClick={() => {
-                  const encoded = btoa(
-                    JSON.stringify(gridRef.current.getLiveCells()),
-                  );
-                  const link = document.createElement("a");
-                  link.href = `data:application/json;base64,${encoded}`;
-                  link.download = "grid.json";
-                  link.click();
-                }}
-              >
-                Export
-              </Button>
-              <Field>
-                <FieldLabel htmlFor="import-input">Import</FieldLabel>
-                <Input
-                  id="import-input"
-                  type="file"
-                  accept=".json"
-                  onChange={(e) => {
-                    const file = e.target.files?.[0];
-
-                    if (file) {
-                      const reader = new FileReader();
-
-                      reader.onload = (e) => {
-                        const text = e.target?.result;
-                        const liveCells = JSON.parse(String(text));
-                        gridRef.current = new Grid(
-                          Array.from({ length: height }, () =>
-                            Array(width).fill(0),
-                          ),
-                        );
-                        gridRef.current.setFromLiveCells(liveCells);
-                        draw();
-                      };
-
-                      reader.readAsText(file);
-                    }
+              <ButtonGroup>
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    const imageURL = canvasRef.current?.toDataURL("image/png");
+                    const link = document.createElement("a");
+                    link.href = `${imageURL}`;
+                    link.download = "grid.png";
+                    link.click();
                   }}
-                />
-              </Field>
+                >
+                  Save as png
+                </Button>
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    const encoded = btoa(
+                      JSON.stringify(gridRef.current.getLiveCells()),
+                    );
+                    const link = document.createElement("a");
+                    link.href = `data:application/json;base64,${encoded}`;
+                    link.download = "grid.json";
+                    link.click();
+                  }}
+                >
+                  Export
+                </Button>
+              </ButtonGroup>
+            </Field>
+            <Field>
+              <FieldLabel htmlFor="import-input">Import</FieldLabel>
+              <Input
+                id="import-input"
+                type="file"
+                accept=".json"
+                onChange={(e) => {
+                  const file = e.target.files?.[0];
+
+                  if (file) {
+                    const reader = new FileReader();
+
+                    reader.onload = (e) => {
+                      const text = e.target?.result;
+                      const liveCells = JSON.parse(String(text));
+                      gridRef.current = new Grid(
+                        Array.from({ length: height }, () =>
+                          Array(width).fill(0),
+                        ),
+                      );
+                      gridRef.current.setFromLiveCells(liveCells);
+                      draw();
+                    };
+
+                    reader.readAsText(file);
+                  }
+                }}
+              />
             </Field>
           </div>
         </CardContent>
