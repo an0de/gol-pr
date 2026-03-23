@@ -10,16 +10,26 @@ const neighborsOffsets = [
 ];
 
 export default class Grid {
+  width: number;
+  height: number;
   current: number[][];
   history: number[][][];
   historyLimit: number;
   historyPos: number;
 
-  constructor(grid: number[][], historyLimit = 42) {
-    this.current = grid;
+  constructor(width: number, height: number, historyLimit = 42) {
+    this.width = width;
+    this.height = height;
+    this.current = Array.from({ length: height }, () => Array(width).fill(0));
     this.historyLimit = historyLimit;
     this.history = [];
     this.historyPos = 0;
+  }
+
+  static fromGrid(grid: number[][]) {
+    const newGrid = new Grid(grid.length, grid[0].length);
+    newGrid.current = grid;
+    return newGrid;
   }
 
   remember() {
@@ -27,6 +37,7 @@ export default class Grid {
       this.history.shift();
     }
     this.history.push(this.current);
+    return this;
   }
 
   back() {
@@ -34,6 +45,7 @@ export default class Grid {
       this.historyPos -= 1;
       this.current = this.history.at(this.historyPos) || [];
     }
+    return this;
   }
 
   forward() {
@@ -70,7 +82,7 @@ export default class Grid {
     this.current = grid.map((row, i) =>
       row.map((isAlive, j) => decide(isAlive, i, j)),
     );
-    return this.current;
+    return this;
   }
 
   getLiveCells() {
@@ -87,7 +99,10 @@ export default class Grid {
 
   setFromLiveCells(liveCells: number[][]) {
     liveCells.forEach(([i, j]) => {
-      this.current[i][j] = 1;
+      if (i >= 0 && i < this.height && j >= 0 && j < this.width) {
+        this.current[i][j] = 1;
+      }
     });
+    return this;
   }
 }

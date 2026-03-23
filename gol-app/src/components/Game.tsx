@@ -8,26 +8,26 @@ import { Button } from "@/components/ui/button";
 import { ButtonGroup } from "@/components/ui/button-group";
 import { Field, FieldLabel } from "@/components/ui/field";
 import { Card, CardContent } from "@/components/ui/card";
+import type { IGrid } from "../types.ts";
 
 interface ConfigProps {
-  gridWidth: number;
-  gridHeight: number;
-  randomLiveCellsProb: number;
-  speed: number;
-  cellSize: number;
+  grid: IGrid;
+  config: {
+    randomLiveCellsProb: number;
+    speed: number;
+    cellSize: number;
+  };
 }
 
-export default function Game(props: ConfigProps) {
-  const [width, setWidth] = useState(props.gridWidth);
-  const [height, setHeight] = useState(props.gridHeight);
-  const [speed, setSpeed] = useState(props.speed);
+export default function Game({ grid, config }: ConfigProps) {
+  const [width, setWidth] = useState(grid.width);
+  const [height, setHeight] = useState(grid.height);
+  const [speed, setSpeed] = useState(config.speed);
   const [isRunning, setIsRunning] = useState(false);
-  const randomLiveCellsProb = props.randomLiveCellsProb;
-  const gridRef = useRef(
-    new Grid(Array.from({ length: height }, () => Array(width).fill(0))),
-  );
+  const randomLiveCellsProb = config.randomLiveCellsProb;
+  const gridRef = useRef(new Grid(width, height).setFromLiveCells(grid.live_cells));
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const cellSize = props.cellSize;
+  const cellSize = config.cellSize;
   const maxSpeed = 100;
   const stampRef = useRef(presets.CELL);
 
@@ -63,6 +63,11 @@ export default function Game(props: ConfigProps) {
     };
   }, [draw, isRunning, speed]);
 
+  useEffect(() => {
+    draw();
+    return () => {};
+  }, [draw]);
+
   return (
     <div className="flex flex-col items-center min-h-screen">
       <Controls
@@ -72,14 +77,12 @@ export default function Game(props: ConfigProps) {
           setIsRunning(!isRunning);
         }}
         onSetCleanGrid={() => {
-          gridRef.current = new Grid(
-            Array.from({ length: height }, () => Array(width).fill(0)),
-          );
+          gridRef.current = new Grid(width, height);
           draw();
           setIsRunning(false);
         }}
         onSetRandomGrid={() => {
-          gridRef.current = new Grid(
+          gridRef.current = Grid.fromGrid(
             Array.from({ length: height }, () =>
               Array(width)
                 .fill(0)
@@ -116,7 +119,7 @@ export default function Game(props: ConfigProps) {
           ref={canvasRef}
           width={width * cellSize}
           height={height * cellSize}
-          className="bg-transparent cursor-pointer"
+          className="bg-transparent cursor-pointer object-contain"
           onClick={(e) => {
             const rect = canvasRef.current?.getBoundingClientRect();
             if (!rect) return;
@@ -182,11 +185,7 @@ export default function Game(props: ConfigProps) {
                     reader.onload = (e) => {
                       const text = e.target?.result;
                       const liveCells = JSON.parse(String(text));
-                      gridRef.current = new Grid(
-                        Array.from({ length: height }, () =>
-                          Array(width).fill(0),
-                        ),
-                      );
+                      gridRef.current = new Grid(width, height);
                       gridRef.current.setFromLiveCells(liveCells);
                       draw();
                     };

@@ -17,7 +17,8 @@ RATINGS_COUNT = 200
 
 def gen_live_cells(width, height):
     return [
-        [randint(0, width), randint(0, height)] for _ in range(0, width * height // 2)
+        [randint(0, height - 1), randint(0, width - 1)]
+        for _ in range(randint(0, width * height // 2))
     ]
 
 
