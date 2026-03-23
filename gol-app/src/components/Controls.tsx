@@ -32,6 +32,7 @@ interface ControlsProps {
 
 export default function Controls(props: ControlsProps) {
   const [isRunning, setIsRunning] = useState(false);
+  const [presetValue, setPresetValue] = useState("CELL");
   const [width, setWidth] = useState(`${props.width}`);
   const [height, setHeight] = useState(`${props.height}`);
   const [errors, setErrors] = useState<string[]>([]);
@@ -108,7 +109,17 @@ export default function Controls(props: ControlsProps) {
 
           <Field>
             <FieldLabel htmlFor="preset-sel">Select Preset</FieldLabel>
-            <ToggleGroup id="preset-sel" type="single" defaultValue="CELL">
+            <ToggleGroup
+              id="preset-sel"
+              type="single"
+              defaultValue="CELL"
+              value={presetValue}
+              onValueChange={(newValue) => {
+                if (newValue) {
+                  setPresetValue(newValue);
+                }
+              }}
+            >
               {Object.keys(presets).map((name, i) => (
                 <ToggleGroupItem
                   variant="outline"
