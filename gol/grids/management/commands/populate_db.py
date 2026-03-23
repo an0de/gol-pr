@@ -8,6 +8,7 @@ from datetime import datetime as dt
 from random import randint, choice, sample
 from faker import Faker
 from grids.models import Grid, Rating
+import os
 
 
 USERS_COUNT = 20
@@ -25,9 +26,20 @@ def gen_live_cells(width, height):
 def create_users():
     User.objects.all().delete()
     User.objects.create(
-        password=make_password("admin"),
+        password=make_password(os.getenv("ADMIN1_PASSWORD", "admin1")),
         is_superuser=True,
-        username="admin",
+        username=os.getenv("ADMIN1", "admin1"),
+        last_name="",
+        email="notset@example.com",
+        is_staff=True,
+        is_active=True,
+        date_joined=dt.now(),
+        first_name="",
+    )
+    User.objects.create(
+        password=make_password(os.getenv("ADMIN2_PASSWORD", "admin2")),
+        is_superuser=True,
+        username=os.getenv("ADMIN2", "admin2"),
         last_name="",
         email="notset@example.com",
         is_staff=True,
@@ -43,7 +55,7 @@ def create_users():
             username=faker.user_name(),
             first_name=faker.first_name(),
             last_name=faker.last_name(),
-            email="notset@example.com",
+            email=faker.email(),
             is_staff=False,
             is_active=True,
             date_joined=faker.date_time(),

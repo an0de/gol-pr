@@ -9,8 +9,12 @@ import {
 } from "@/components/ui/button-group";
 
 function setNavUrl(url: string) {
-  const { search } = new URL(url);
-  return `/grids/${search}`;
+  try {
+    const { search } = new URL(url);
+    return `/grids/${search}`;
+  } catch {
+    return document.URL;
+  }
 }
 
 export default function Gallery() {
@@ -27,12 +31,12 @@ export default function Gallery() {
       </div>
       <div className="flex flex-wrap justify-center gap-6 m-4">
         <ButtonGroup id="prev-next-btn">
-          <Button id="prev-btn">
-            <a href={setNavUrl(data.previous || "")}>Previous</a>
+          <Button id="prev-btn" disabled={!data.previous}>
+            <a href={setNavUrl(data.previous)}>Previous</a>
           </Button>
           <ButtonGroupSeparator />
-          <Button id="next-btn">
-            <a href={setNavUrl(data.next || "")}>Next</a>
+          <Button id="next-btn" disabled={!data.next}>
+            <a href={setNavUrl(data.next)}>Next</a>
           </Button>
         </ButtonGroup>
       </div>
