@@ -25,4 +25,4 @@ interface IGrid {
   created_at: string;
   avg_rating: number;
 }
-export { IGrid, IPaginatedGridList };
+export type { IGrid, IPaginatedGridList };
