@@ -4,22 +4,7 @@ import react from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
 
 export default defineConfig({
-  plugins: [
-    react(),
-    tailwindcss(),
-    {
-      name: "lowercase-filenames",
-      generateBundle(_, bundle) {
-        for (const fileName in bundle) {
-          const asset = bundle[fileName];
-          const newFileName = fileName.toLowerCase();
-          if (newFileName !== fileName) {
-            asset.fileName = newFileName;
-          }
-        }
-      },
-    },
-  ],
+  plugins: [react(), tailwindcss()],
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
@@ -28,6 +13,8 @@ export default defineConfig({
   server: {
     host: true,
     port: 8080,
+    cors: true,
+    origin: "http://127.0.0.1:8000",
     watch: {
       usePolling: true,
       interval: 300,
@@ -36,17 +23,14 @@ export default defineConfig({
       "/api/grids/": "http://localhost:8000",
     },
   },
+  base: "/static/dist",
   build: {
     outDir: "../static/dist",
     emptyOutDir: true,
     assetsDir: "assets",
-    manifest: true,
-    // rollupOptions: {
-    //   output: {
-    //     entryFileNames: "assets/[name].[hash].[ext]",
-    //     chunkFileNames: "assets/[name].[hash].[ext]",
-    //     assetFileNames: "assets/[name].[hash].[ext]",
-    //   },
-    // },
+    manifest: "manifest.json",
+    rollupOptions: {
+      input: "src/main.tsx",
+    },
   },
 });
