@@ -141,3 +141,5 @@ vite.config.ts.timestamp-*
 *.pyc
 static
 staticfiles
+.vercel
+.env*.local
