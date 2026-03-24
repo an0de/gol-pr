@@ -9,6 +9,7 @@ dependencies = [
     "django-vite>=3.1.0",
     "djangorestframework>=3.17.0",
     "drf-spectacular>=0.29.0",
+    "psycopg2-binary>=2.9.11",
     "python-dotenv>=1.2.2",
     "pyyaml>=6.0.3",
     "whitenoise>=6.12.0",

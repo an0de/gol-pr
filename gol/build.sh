@@ -11,5 +11,6 @@ cd - || exit 1
 
 uv run python manage.py makemigrations
 uv run python manage.py migrate
+uv run python manage.py populate_db
 
 uv run python manage.py collectstatic --noinput
