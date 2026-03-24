@@ -15,19 +15,11 @@
   "routes": [
     {
       "src": "/static/(.*)",
-      "dest": "/static/$1"
-    },
-    {
-      "src": "/api/(.*)",
-      "dest": "gol/wsgi.py"
-    },
-    {
-      "src": "/admin/(.*)",
-      "dest": "gol/wsgi.py"
+      "dest": "/staticfiles/$1"
     },
     {
       "src": "/(.*)",
-      "dest": "staticfiles/index.html"
+      "dest": "gol/wsgi.py"
     }
   ]
 }
