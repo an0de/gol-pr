@@ -23,9 +23,9 @@ export default defineConfig({
       "/api/grids/": "http://localhost:8000",
     },
   },
-  base: "/static/dist",
+  base: "/static/dist/",
   build: {
-    outDir: "../static/dist",
+    outDir: "../static/dist/",
     emptyOutDir: true,
     assetsDir: "assets",
     manifest: "manifest.json",

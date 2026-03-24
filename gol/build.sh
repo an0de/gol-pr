@@ -1,7 +1,8 @@
 #!/usr/bin/env sh
 
 uv sync
-mkdir -p staticfiles
+rm -rf static staticfiles
+mkdir -p static staticfiles
 
 cd app || exit 1
 npm ci

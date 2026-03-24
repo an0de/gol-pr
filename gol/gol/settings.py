@@ -137,7 +137,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATICFILES_DIRS = [
-    BASE_DIR / "static/dist",
+    BASE_DIR / "static",
 ]
 
 
@@ -151,7 +151,6 @@ DJANGO_VITE = {
         "dev_mode": False,
         "dev_server_port": 8080,
         "manifest_path": BASE_DIR / "static/dist/manifest.json",
-        "static_url_prefix": "dist/",
     }
 }
 
