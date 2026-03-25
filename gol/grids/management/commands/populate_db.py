@@ -48,6 +48,17 @@ def create_users():
         first_name="",
     )
     faker = Faker()
+    User.objects.create(
+        password=make_password(os.getenv("REP_USER_PASSWORD", "user1")),
+        is_superuser=False,
+        username=os.getenv("REP_USER", "user1"),
+        first_name=faker.first_name(),
+        last_name=faker.last_name(),
+        email=faker.email(),
+        is_staff=False,
+        is_active=True,
+        date_joined=faker.date_time(),
+    )
     for _ in range(USERS_COUNT):
         User.objects.create(
             password=make_password(faker.password()),
