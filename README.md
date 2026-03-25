@@ -4,7 +4,7 @@
 
 This project demonstrates the integration of a React frontend (powered by Vite) with a Django backend, styled with Tailwind CSS.
 
-[Deploy](gol-pr.vercel.app)
+[Deploy](https://gol-pr.vercel.app)
 
 [![Maintainability](https://api.codeclimate.com/v1/badges/21bde3bd4aa17bb09123/maintainability)](https://codeclimate.com/github/an0de/frontend-project-44/maintainability)
 
@@ -31,4 +31,3 @@ uv run python manage.py migrate
 uv run python manage.py populate_db
 uv run python manage.py collectstatic --noinput
 ```
-
